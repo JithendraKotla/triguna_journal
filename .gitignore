@@ -1,0 +1,7 @@
+# Never push secrets or local database to GitHub
+.streamlit/secrets.toml
+triguna.db
+*.db
+__pycache__/
+*.pyc
+.env
