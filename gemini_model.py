@@ -2,7 +2,7 @@ import google.generativeai as genai
 import json, re, os
 import streamlit as st
 
-# Read API key from Streamlit secrets (cloud) or environment variable (local)
+# Read API key safely from Streamlit secrets (cloud) or environment variable (local)
 def _get_api_key():
     try:
         return st.secrets["GEMINI_API_KEY"]
@@ -55,13 +55,11 @@ RULES:
     try:
         response = model.generate_content(prompt)
         text = response.text.strip()
-        # Extract JSON block (handle markdown code fences)
         match = re.search(r'\{.*\}', text, re.DOTALL)
         if not match:
             raise ValueError("No JSON found in response")
         data = json.loads(match.group())
 
-        # Validate percentages sum to 100
         total = data.get("Sattva", 0) + data.get("Rajas", 0) + data.get("Tamas", 0)
         if abs(total - 100) > 2:
             factor = 100 / total
